@@ -1,7 +1,8 @@
 import csv
 import json
 from datetime import date
-from main import inventory_log_headers
+
+inventory_log_headers = ["date", "item", "product", "qty", "cost"]
 
 class Inventory:
     # Class variable to store the path of the inventory data file
