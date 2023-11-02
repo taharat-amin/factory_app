@@ -24,7 +24,7 @@ class Product:
 
     # Constructor to initialize the Product object
     def __init__(self) -> None:
-        print("[PRODUCT] Product object initialized...")
+        print("[PRODUCT] Product object initialized...\n")
 
     # Representation of Product objects
     def __repr__(self) -> str:
