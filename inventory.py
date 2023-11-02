@@ -5,6 +5,7 @@ from os import system
 
 inventory_log_headers = ["date", "item", "product", "qty", "cost"]
 
+
 class Inventory:
     # Class variable to store the path of the inventory data file
     inventory_data = ".json/inventory.json"
@@ -85,12 +86,14 @@ class Inventory:
                 if item["qty"] >= quantity:
                     # Reduce the quantity of the item in inventory by the transferred amount
                     item["qty"] -= quantity
-                    price = item["price"]  # Get the price of the item for logging purposes
+                    # Get the price of the item for logging purposes
+                    price = item["price"]
                     price *= quantity
                     break
                 else:
                     # If there is not enough quantity in inventory, print an error message and return False
-                    print("[INVENTORY] {name} is {qty} units less than required amount\n".format(name=name, qty=quantity-item["qty"]))
+                    print("[INVENTORY] {name} is {qty} units less than required amount\n".format(
+                        name=name, qty=quantity-item["qty"]))
                     return False
         else:
             print("[INVENTORY] {name} not available in inventory\n")
@@ -106,8 +109,10 @@ class Inventory:
                 {"date": date.today(), "item": name, "product": product, "qty": quantity, "cost": price})
 
         # Print a success message indicating the transfer of items to production and return price of the item for product cost calculation
-        print("[INVENTORY] Transferred {qty} units of {item} to product {product}\n".format(qty=quantity, item=name, product=product))
+        print("[INVENTORY] Transferred {qty} units of {item} to product {product}\n".format(
+            qty=quantity, item=name, product=product))
         return True, price
-    
+
+    # Generate log report
     def generate_report(self):
         system("cp .csv/inventory_log.csv \"Inventory Log Report\".csv")
