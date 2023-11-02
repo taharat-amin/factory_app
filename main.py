@@ -75,26 +75,38 @@ class Inventory:
 
     # Method to transfer raw material to production
     def transfer_to_production(self, name, product, quantity):
-
+        # Load existing inventory items from the data file
         items = []
-        price = 0
         with open(self.inventory_data, "r") as file:
             items = json.load(file)
 
+        # Iterate through the inventory items to find the specified item by name
         for item in items:
             if item["name"] == name:
-                item["qty"] -= quantity
-                price = item["price"]
-                break
+                # Check if the available quantity in inventory is sufficient for the transfer
+                if item["qty"] >= quantity:
+                    # Reduce the quantity of the item in inventory by the transferred amount
+                    item["qty"] -= quantity
+                    price = item["price"]  # Get the price of the item for logging purposes
+                    break
+                else:
+                    # If there is not enough quantity in inventory, print an error message and return False
+                    print("[INVENTORY] {name} is {qty} units less than required amount".format(name=name, qty=quantity-item["qty"]))
+                    return False
 
+        # Update the inventory data file with the modified item quantities
         with open(self.inventory_data, "w") as file:
             json.dump(items, file)
 
+        # Log the transfer operation in the inventory log file
         with open(self.inventory_log, "a") as file:
             csv.DictWriter(file, fieldnames=inventory_log_headers, delimiter=';').writerow(
                 {"date": date.today(), "item": name, "product": product, "qty": quantity, "cost": price})
-            
+
+        # Print a success message indicating the transfer of items to production and return True
         print("[INVENTORY] Transferred {qty} units of {item} to product {product}".format(qty=quantity, item=name, product=product))
+        return True
+
 
 
 class Employee:
@@ -169,4 +181,4 @@ print("""\n
                                                                                                                                                                                                                     \n""")
 inv.add_item("Copper", 16, 2.5)
 inv.add_item("Iron", 20, 10)
-inv.transfer_to_production("Copper", "Cables", 6)
+inv.transfer_to_production("Copper", "Cables", 30)
