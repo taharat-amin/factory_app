@@ -91,7 +91,7 @@ class Employee:
                     # If not, print a message indicating insufficient budget
                     print("[EMPLOYEE] Wage of {employee} is Tk.{wage} higher than budget\n".format(
                         employee=name, wage=wage - budget))
-                    return False
+                    return False, 0
 
     # Generate log report
     def generate_report(self):
