@@ -1,10 +1,13 @@
 from datetime import date
+from os import system
 import json
 import csv
 
 employee_log_headers = ["date", "employee", "product", "hours", "cost"]
 
 class Employee:
+    employee_data = '.json/employees.json'
+    employee_log = '.csv/employee_log.csv'
     # Initialize the Employee class
     def __init__(self) -> None:
         print("[EMPLOYEE] Employee object initialized...\n")
@@ -86,3 +89,6 @@ class Employee:
                     print("[EMPLOYEE] Wage of {employee} is Tk.{wage} higher than budget\n".format(
                         employee=name, wage=wage - budget))
                     return False
+                
+    def generate_report(self):
+        system("cp .csv/employee_log.csv \"Employee Log Report\".csv")
