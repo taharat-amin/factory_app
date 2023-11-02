@@ -123,7 +123,7 @@ while True:
             wrong_pass_count -= 1
             if wrong_pass_count == 0:
                 print(
-                    "\n[SYSTEM] Unauthorized personnel detected. Initiating fallback sequence...\n")
+                    "\n[SYSTEM] Suspicious activity detected. Initiating fallback sequence...\n")
                 sleep(3)
                 with open(".fallback.txt", "w") as fallback_file:
                     fallback_file.writelines(str(datetime.now()))
@@ -139,6 +139,4 @@ while True:
         # Perform actions after successful login
         print("\n[SYSTEM] Login successful. Welcome {username}\n".format(username=username))
         # Add your code for actions to be performed after successful login here
-
-        # Exit the outermost loop after successful login and actions
-        break
+        pass
