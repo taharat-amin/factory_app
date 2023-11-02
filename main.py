@@ -1,44 +1,39 @@
-import json
-import os
+class Inventory:
+    
+    def __init__(self):
+        
+        print("[MESSAGE] Inventory object inititated...")
 
-class Account:
-
-    account_type = {1: "Asset", 2: "Liability",
-                    3: "Equity", 4: "Revenue", 5: "Expense"}
-
-    def __init__(self, title):
-        self.title = title
-
-    def create_account(self, type, normal_balance, accrual):
-        acc = {"title": self.title, "type": self.account_type[type],
-               "normal_balance": normal_balance, "is_accrual": accrual}
-
-        accounts = []
-
-        # Check if the accounts_chart.json file exists
-        if os.path.exists("accounts_chart.json"):
-            # Read existing accounts from the file
-            with open("accounts_chart.json", "r") as chart:
-                accounts = json.load(chart)
-
-            # Check if the account with the given title already exists
-            for existing_acc in accounts:
-                if existing_acc["title"] == self.title:
-                    print("Account already exists.")
-                    break
-            else:
-                # If the loop completes without a break, add the new account
-                accounts.append(acc)
-                with open("accounts_chart.json", "w") as chart:
-                    json.dump(accounts, chart)
-                print("Account enlistment successful")
-        else:
-            # If the file doesn't exist, create a new one and add the account
-            with open("accounts_chart.json", "w") as chart:
-                json.dump([acc], chart)
-            print("Account enlistment successful")
+    def __repr__(self):
+        
+        return "This class manages raw material inventory of the factory"
 
 
+class Employee:
+    
+    def __init__(self) -> None:
+        
+        print("[MESSAGE] Employee object initiated...")
 
-acc = Account("Cash")
-acc.create_account(1, "Dr", False)
+    def __repr__(self):
+        
+        return "This class manages employees of the factory"
+
+class Product:
+    
+    def __init__(self) -> None:
+
+        print("[MESSAGE] Product object initiated...")
+
+    def __repr__(self) -> str:
+        
+        return "This class manages finished goods inventory of the factory"
+
+
+inv = Inventory()
+emp = Employee()
+pro = Product()
+
+print(inv)
+print(emp)
+print(pro)
