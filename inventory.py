@@ -82,6 +82,7 @@ class Inventory:
                     # Reduce the quantity of the item in inventory by the transferred amount
                     item["qty"] -= quantity
                     price = item["price"]  # Get the price of the item for logging purposes
+                    price *= quantity
                     break
                 else:
                     # If there is not enough quantity in inventory, print an error message and return False
@@ -97,6 +98,6 @@ class Inventory:
             csv.DictWriter(file, fieldnames=inventory_log_headers, delimiter=';').writerow(
                 {"date": date.today(), "item": name, "product": product, "qty": quantity, "cost": price})
 
-        # Print a success message indicating the transfer of items to production and return True
+        # Print a success message indicating the transfer of items to production and return price of the item for product cost calculation
         print("[INVENTORY] Transferred {qty} units of {item} to product {product}".format(qty=quantity, item=name, product=product))
-        return True
+        return True, price
