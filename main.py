@@ -1,28 +1,13 @@
-from inventory import Inventory
-from employee import Employee
+from inventory import Inventory, inventory_log_headers
+from employee import Employee, employee_log_headers
+from product import Product, product_log_headers
 
 from os.path import exists
 from os import system
 import csv
-
-
-# Placed in global scope because of use in multiple place of the code
-product_headers = ["date", "product", "employee", "material_cost", "labor_cost", "total_cost"]
-inventory_log_headers = ["date", "item", "product", "qty", "cost"]
-employee_log_headers = ["date", "employee", "product", "hours", "cost"]
-
-class Product:
-
-    product_data = '.products.json'
-    finished_goods_data = '.finished_goods.csv'
-
-    def __init__(self) -> None:
-
-        print("[PRODUCT] Product object initialized...")
-
-    def __repr__(self) -> str:
-
-        return "This class manages finished goods inventory of the factory"
+import json
+from hashlib import sha256
+from getpass import getpass
 
 # Create folders for better management
 if not exists("./.json"):
@@ -53,12 +38,13 @@ if not exists(".csv/employee_log.json"):
 if not exists(".json/products.json"):
     system("touch .json/products.json")
 
-if not exists(".csv/finished_goods.csv"):
-    system("touch .csv/finished_goods.csv")
-    with open(".csv/finished_goods.csv", "w") as file:
-        csv.DictWriter(file, fieldnames=product_headers,
+if not exists(".csv/product_log.csv"):
+    system("touch .csv/product_log.csv")
+    with open(".csv/product_log.csv", "w") as file:
+        csv.DictWriter(file, fieldnames=product_log_headers,
                        delimiter=';').writeheader()
-
+        
+# Instantiate the objects
 print("[SYSTEM] Initializing system...")
 print("[DATA] Data storage initialized...")
 inv = Inventory()
@@ -74,6 +60,21 @@ print("""\n
 ██║     ██║  ██║╚██████╗   ██║   ╚██████╔╝██║  ██║   ██║       ██║ ╚═╝ ██║██║  ██║██║ ╚████║██║  ██║╚██████╔╝███████╗██║ ╚═╝ ██║███████╗██║ ╚████║   ██║       ███████║   ██║   ███████║   ██║   ███████╗██║ ╚═╝ ██║
 ╚═╝     ╚═╝  ╚═╝ ╚═════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝       ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝       ╚══════╝   ╚═╝   ╚══════╝   ╚═╝   ╚══════╝╚═╝     ╚═╝
                                                                                                                                                                                                                     \n""")
-inv.add_item("Copper", 16, 2.5)
-inv.add_item("Iron", 20, 10)
-inv.transfer_to_production("Copper", "Cables", 30)
+print("\nWELCOME TO THE FACTORY MANAGEMENT SYSTEM\n")
+
+#User creation segment
+if not exists(".credentials.json"):
+    system("touch .credentials.json")
+    print("[SYSTEM] No user exists. Create a profile to continue\n")
+    username = input("Enter username: ")
+    while True:
+        pass1 = getpass("Enter password: ")
+        pass2 = getpass("Enter password again: ")
+        if pass1 == pass2:
+            with open(".credentials.json", "w") as file:
+                json.dump({"username":username, "password":sha256(pass1.encode('utf-8')).hexdigest()}, file)
+            print("[SYSTEM] Profile creation successful\n")
+            break
+        else:
+            print("[SYSTEM] Passwords do not match. Try again\n")
+            continue
