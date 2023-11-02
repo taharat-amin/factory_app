@@ -14,7 +14,7 @@ class Inventory:
     # Constructor method to initialize the Inventory object
     def __init__(self, main_screen_init=False):
         if main_screen_init:
-            print("[INVENTORY] Inventory object initialized...\n")
+            print("[INVENTORY] Inventory counted...\n")
 
     # Representation method to provide a string representation of the class
     def __repr__(self):

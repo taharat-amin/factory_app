@@ -13,7 +13,7 @@ class Employee:
 
     def __init__(self, main_screen_init=False) -> None:
         if main_screen_init:
-            print("[EMPLOYEE] Employee object initialized...\n")
+            print("[EMPLOYEE] Employees called...\n")
 
     # Representation of Employee objects
     def __repr__(self):
