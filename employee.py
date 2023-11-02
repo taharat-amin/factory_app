@@ -11,8 +11,9 @@ class Employee:
     employee_log = '.csv/employee_log.csv'
     # Initialize the Employee class
 
-    def __init__(self) -> None:
-        print("[EMPLOYEE] Employee object initialized...\n")
+    def __init__(self, main_screen_init=False) -> None:
+        if main_screen_init:
+            print("[EMPLOYEE] Employee object initialized...\n")
 
     # Representation of Employee objects
     def __repr__(self):

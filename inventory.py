@@ -12,8 +12,9 @@ class Inventory:
     inventory_log = ".csv/inventory_log.csv"
 
     # Constructor method to initialize the Inventory object
-    def __init__(self):
-        print("[INVENTORY] Inventory object initialized...\n")
+    def __init__(self, main_screen_init=False):
+        if main_screen_init:
+            print("[INVENTORY] Inventory object initialized...\n")
 
     # Representation method to provide a string representation of the class
     def __repr__(self):
