@@ -11,20 +11,22 @@ class Inventory:
 
     # Constructor method to initialize the Inventory object
     def __init__(self):
-        print("[INVENTORY] Inventory object initialized...")
+        print("[INVENTORY] Inventory object initialized...\n")
 
     # Representation method to provide a string representation of the class
     def __repr__(self):
-        text = ""
+        text = "[INVENTORY] List of Inventory Begin\n-----------------------------------\n"
         items = []
         with open(self.inventory_data, "r") as file:
             try:
                 items = json.load(file)
             except json.decoder.JSONDecodeError:
-                return "[INVENTORY] No item exists in inventory"
+                return "[INVENTORY] No item exists in inventory\n"
 
         for item in items:
             text += str(item)+"\n"
+        text += "\n**Price indicates moving average unit price**\n"
+        text += "\n-----------------------------------\n[INVENTORY] List of Inventory End\n"
 
         return text
 
@@ -41,7 +43,7 @@ class Inventory:
                 # If the file is empty, add the new item directly to the file
                 json.dump(
                     [{"name": name, "qty": quantity, "price": new_price}], file)
-                print("[INVENTORY] Added {qty} units of {item} @ Tk.{price}/unit".format(
+                print("[INVENTORY] Added {qty} units of {item} @ Tk.{price}/unit\n".format(
                     qty=quantity, item=name, price=new_price))
                 return
 
@@ -64,7 +66,7 @@ class Inventory:
         with open(self.inventory_data, "w") as file:
             # Serialize items list to JSON and write to file
             json.dump(items, file)
-            print("[INVENTORY] Added {qty} units of {item} @ Tk.{price}/unit".format(
+            print("[INVENTORY] Added {qty} units of {item} @ Tk.{price}/unit\n".format(
                 qty=quantity, item=name, price=new_price))
         return
 
@@ -87,7 +89,7 @@ class Inventory:
                     break
                 else:
                     # If there is not enough quantity in inventory, print an error message and return False
-                    print("[INVENTORY] {name} is {qty} units less than required amount".format(name=name, qty=quantity-item["qty"]))
+                    print("[INVENTORY] {name} is {qty} units less than required amount\n".format(name=name, qty=quantity-item["qty"]))
                     return False
 
         # Update the inventory data file with the modified item quantities
@@ -100,5 +102,5 @@ class Inventory:
                 {"date": date.today(), "item": name, "product": product, "qty": quantity, "cost": price})
 
         # Print a success message indicating the transfer of items to production and return price of the item for product cost calculation
-        print("[INVENTORY] Transferred {qty} units of {item} to product {product}".format(qty=quantity, item=name, product=product))
+        print("[INVENTORY] Transferred {qty} units of {item} to product {product}\n".format(qty=quantity, item=name, product=product))
         return True, price
