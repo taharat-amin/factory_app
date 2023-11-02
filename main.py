@@ -2,21 +2,36 @@ from os.path import exists
 from os import system
 import csv
 import json
+from datetime import date
 
 # Placed in global scope because of use in multiple place of the code
-csv_headers = ["date", "product", "employee", "cost"]
+product_headers = ["date", "product", "employee", "cost"]
+inventory_log_headers = ["date", "item", "product", "qty", "cost"]
+
 
 class Inventory:
     # Class variable to store the path of the inventory data file
-    inventory_data = 'inventory.json'
+    inventory_data = ".json/inventory.json"
+    inventory_log = ".csv/inventory_log.csv"
 
     # Constructor method to initialize the Inventory object
     def __init__(self):
-        print("[INVENTORY] Inventory object initiated...")
+        print("[INVENTORY] Inventory object initialized...")
 
     # Representation method to provide a string representation of the class
     def __repr__(self):
-        return """This class manages raw material inventory of the factory\nInventory class data heads:\n\"name\": The name of the item\n\"qty\": The quantity of the item\n\"price\": The moving average price per unit of the item"""
+        text = ""
+        items = []
+        with open(self.inventory_data, "r") as file:
+            try:
+                items = json.load(file)
+            except json.decoder.JSONDecodeError:
+                return "[INVENTORY] No item exists in inventory"
+
+        for item in items:
+            text += str(item)+"\n"
+
+        return text
 
     # Method to add items to the inventory
     def add_item(self, name, quantity, new_price):
@@ -29,8 +44,9 @@ class Inventory:
                 items = json.load(file)
             except:
                 # If the file is empty, add the new item directly to the file
-                json.dump([{"name": name, "qty": quantity, "price": new_price}], file)
-                print("[SUCCESS] Added {qty} units of {item} @ Tk.{price}/unit".format(
+                json.dump(
+                    [{"name": name, "qty": quantity, "price": new_price}], file)
+                print("[INVENTORY] Added {qty} units of {item} @ Tk.{price}/unit".format(
                     qty=quantity, item=name, price=new_price))
                 return
 
@@ -38,7 +54,8 @@ class Inventory:
         for item in items:
             # If the item already exists in the inventory, update its quantity and price
             if item["name"] == name:
-                price = item["qty"] * item["price"]  # Calculate total cost of existing items
+                # Calculate total cost of existing items
+                price = item["qty"] * item["price"]
                 item["qty"] += quantity  # Update quantity
                 price += quantity * new_price  # Add cost of new items
                 price /= item["qty"]  # Calculate new average price
@@ -50,10 +67,34 @@ class Inventory:
 
         # Write the updated inventory data back to the file
         with open(self.inventory_data, "w") as file:
-            json.dump(items, file)  # Serialize items list to JSON and write to file
-            print("[SUCCESS] Added {qty} units of {item} @ Tk.{price}/unit".format(
+            # Serialize items list to JSON and write to file
+            json.dump(items, file)
+            print("[INVENTORY] Added {qty} units of {item} @ Tk.{price}/unit".format(
                 qty=quantity, item=name, price=new_price))
         return
+
+    # Method to transfer raw material to production
+    def transfer_to_production(self, name, product, quantity):
+
+        items = []
+        price = 0
+        with open(self.inventory_data, "r") as file:
+            items = json.load(file)
+
+        for item in items:
+            if item["name"] == name:
+                item["qty"] -= quantity
+                price = item["price"]
+                break
+
+        with open(self.inventory_data, "w") as file:
+            json.dump(items, file)
+
+        with open(self.inventory_log, "a") as file:
+            csv.DictWriter(file, fieldnames=inventory_log_headers, delimiter=';').writerow(
+                {"date": date.today(), "item": name, "product": product, "qty": quantity, "cost": price})
+            
+        print("[INVENTORY] Transferred {qty} units of {item} to product {product}".format(qty=quantity, item=name, product=product))
 
 
 class Employee:
@@ -62,7 +103,7 @@ class Employee:
 
     def __init__(self) -> None:
 
-        print("[EMPLOYEE] Employee object initiated...")
+        print("[EMPLOYEE] Employee object initialized...")
 
     def __repr__(self):
 
@@ -76,31 +117,56 @@ class Product:
 
     def __init__(self) -> None:
 
-        print("[PRODUCT] Product object initiated...")
+        print("[PRODUCT] Product object initialized...")
 
     def __repr__(self) -> str:
 
         return "This class manages finished goods inventory of the factory"
 
-#Create the data files if those does not exist
-if not exists("inventory.json"):
-    system("touch .inventory.json")
-if not exists("employees.json"):
-    system("touch .employees.json")
-if not exists("products.json"):
-    system("touch .products.json")
-if not exists("finished_goods.csv"):
-    system("touch .finished_goods.csv")
-    with open(".finished_goods.csv", "w") as file:
-        csv.DictWriter(file, fieldnames=csv_headers,
+# Create folders for better management
+if not exists("./.json"):
+    system("mkdir .json")
+
+if not exists("./.csv"):
+    system("mkdir .csv")
+
+# Create the data files if those does not exist
+if not exists(".json/inventory.json"):
+    system("touch .json/inventory.json")
+
+if not exists(".csv/inventory_log.csv"):
+    system("touch .csv/inventory_log.csv")
+    with open(".csv/inventory_log.csv", "w") as file:
+        csv.DictWriter(file, fieldnames=inventory_log_headers,
+                       delimiter=';').writeheader()
+        
+if not exists(".json/employees.json"):
+    system("touch .json/employees.json")
+
+if not exists(".json/products.json"):
+    system("touch .json/products.json")
+
+if not exists(".csv/finished_goods.csv"):
+    system("touch .csv/finished_goods.csv")
+    with open(".csv/finished_goods.csv", "w") as file:
+        csv.DictWriter(file, fieldnames=product_headers,
                        delimiter=';').writeheader()
 
-print("[SYSTEM] Initiating system...")
-print("[DATA] Data storage initiated...")
+print("[SYSTEM] Initializing system...")
+print("[DATA] Data storage initialized...")
 inv = Inventory()
 emp = Employee()
 pro = Product()
-print("[SYSTEM] System initiated...")
-print("------FACTORY MANAGEMENT SYSTEM------")
+print("[SYSTEM] System initialized...")
+
+print("""\n
+███████╗ █████╗  ██████╗████████╗ ██████╗ ██████╗ ██╗   ██╗    ███╗   ███╗ █████╗ ███╗   ██╗ █████╗  ██████╗ ███████╗███╗   ███╗███████╗███╗   ██╗████████╗    ███████╗██╗   ██╗███████╗████████╗███████╗███╗   ███╗
+██╔════╝██╔══██╗██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗╚██╗ ██╔╝    ████╗ ████║██╔══██╗████╗  ██║██╔══██╗██╔════╝ ██╔════╝████╗ ████║██╔════╝████╗  ██║╚══██╔══╝    ██╔════╝╚██╗ ██╔╝██╔════╝╚══██╔══╝██╔════╝████╗ ████║
+█████╗  ███████║██║        ██║   ██║   ██║██████╔╝ ╚████╔╝     ██╔████╔██║███████║██╔██╗ ██║███████║██║  ███╗█████╗  ██╔████╔██║█████╗  ██╔██╗ ██║   ██║       ███████╗ ╚████╔╝ ███████╗   ██║   █████╗  ██╔████╔██║
+██╔══╝  ██╔══██║██║        ██║   ██║   ██║██╔══██╗  ╚██╔╝      ██║╚██╔╝██║██╔══██║██║╚██╗██║██╔══██║██║   ██║██╔══╝  ██║╚██╔╝██║██╔══╝  ██║╚██╗██║   ██║       ╚════██║  ╚██╔╝  ╚════██║   ██║   ██╔══╝  ██║╚██╔╝██║
+██║     ██║  ██║╚██████╗   ██║   ╚██████╔╝██║  ██║   ██║       ██║ ╚═╝ ██║██║  ██║██║ ╚████║██║  ██║╚██████╔╝███████╗██║ ╚═╝ ██║███████╗██║ ╚████║   ██║       ███████║   ██║   ███████║   ██║   ███████╗██║ ╚═╝ ██║
+╚═╝     ╚═╝  ╚═╝ ╚═════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝       ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝       ╚══════╝   ╚═╝   ╚══════╝   ╚═╝   ╚══════╝╚═╝     ╚═╝
+                                                                                                                                                                                                                    \n""")
 inv.add_item("Copper", 16, 2.5)
 inv.add_item("Iron", 20, 10)
+inv.transfer_to_production("Copper", "Cables", 6)
