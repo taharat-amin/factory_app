@@ -1,4 +1,5 @@
 from inventory import Inventory
+from employee import Employee
 
 from os.path import exists
 from os import system
@@ -6,21 +7,9 @@ import csv
 
 
 # Placed in global scope because of use in multiple place of the code
-product_headers = ["date", "product", "employee", "cost"]
+product_headers = ["date", "product", "employee", "material_cost", "labor_cost", "total_cost"]
 inventory_log_headers = ["date", "item", "product", "qty", "cost"]
-
-class Employee:
-
-    employee_data = '.employees.json'
-
-    def __init__(self) -> None:
-
-        print("[EMPLOYEE] Employee object initialized...")
-
-    def __repr__(self):
-
-        return "This class manages employees of the factory"
-
+employee_log_headers = ["date", "employee", "product", "hours", "cost"]
 
 class Product:
 
@@ -51,9 +40,15 @@ if not exists(".csv/inventory_log.csv"):
     with open(".csv/inventory_log.csv", "w") as file:
         csv.DictWriter(file, fieldnames=inventory_log_headers,
                        delimiter=';').writeheader()
-        
+      
 if not exists(".json/employees.json"):
     system("touch .json/employees.json")
+
+if not exists(".csv/employee_log.json"):
+    system("touch .csv/employee_log.csv")
+    with open(".csv/employee_log.csv", "w") as file:
+        csv.DictWriter(file, fieldnames=employee_log_headers,
+                       delimiter=';').writeheader()
 
 if not exists(".json/products.json"):
     system("touch .json/products.json")
