@@ -37,8 +37,7 @@ class Inventory:
             if len(str(item["price"])) > longest_price:
                 longest_price = len(item["price"])
 
-        text += "Inventory".center(longest_name+longest_quantity+longest_price+6)
-        text += "\n"
+        text += "Inventory".center(longest_name+longest_quantity+longest_price+6)+"\n"
         text += "-"*(longest_name+longest_quantity+longest_price+8)+"\n"
         text += "Item"+" "*(longest_name-len("Item"))+" | "
         text += "Quantity"+" "*(longest_quantity-len("Quantity"))+" | "
@@ -48,7 +47,7 @@ class Inventory:
         for item in items:
 
             text += "{name} | {qty} | {price} |\n".format(name=item["name"].ljust(longest_name), qty=str(
-                item["qty"]).ljust(longest_quantity), price=str(item["price"]).ljust(longest_price))
+                item["qty"]).rjust(longest_quantity), price=str(item["price"]).rjust(longest_price))
         
         text += "-"*(longest_name+longest_quantity+longest_price+8)+"\n"
 
