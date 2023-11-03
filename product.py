@@ -144,10 +144,16 @@ class Product:
                     labor_cost += labor[1]
                     total_cost += labor[1]
                 else:
-                    print("\033[91m\n[PRODUCT] \033[0m", end='')
-                    print("Aborting production of {produce} due to insufficient labor budget\n".format(
-                        produce=produce))
-                    return
+                    if labor[1] == 0:
+                        print("\033[91m\n[PRODUCT] \033[0m", end='')
+                        print("Aborting production of {produce} due to insufficient labor budget\n".format(
+                            produce=produce))
+                        return
+                    else:
+                        print("\033[91m\n[PRODUCT] \033[0m", end='')
+                        print("Aborting production of {produce} due to unavilability of labor\n".format(
+                            produce=produce))
+                        return
 
                 # Calculate overhead cost
                 overhead_cost = material_cost * 0.1 + labor_cost * 0.15

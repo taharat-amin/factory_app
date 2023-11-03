@@ -24,6 +24,7 @@ class Inventory:
             try:
                 items = json.load(file)
             except json.decoder.JSONDecodeError:
+                print("\033[91m\n[INVENTORY]  \033[0m", end='')
                 return "[INVENTORY] No item exists in inventory\n"
 
         longest_name = len("Name")

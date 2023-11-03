@@ -25,7 +25,8 @@ class Employee:
             try:
                 employees = json.load(file)
             except json.decoder.JSONDecodeError:
-                return "[EMPLOYEE] No employee enlisted\n"
+                print("\033[91m\n[EMPLOYEE]  \033[0m", end='')
+                return "No employee enlisted\n"
 
         longest_name = len("Name")
         longest_address = len("Address")
@@ -134,6 +135,10 @@ class Employee:
                     print("Wage of {employee} is Tk.{wage} higher than budget\n".format(
                         employee=name, wage=wage - budget))
                     return False, 0
+        else:
+            print("\033[91m\n[EMPLOYEE]  \033[0m", end='')
+            print("Employee {name} not enlisted".format(name=name))
+            return False, 1
 
     # Generate log report
     def generate_report(self):
