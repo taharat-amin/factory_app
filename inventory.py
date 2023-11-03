@@ -66,7 +66,8 @@ class Inventory:
                 # If the file is empty, add the new item directly to the file
                 json.dump(
                     [{"name": name, "qty": quantity, "price": new_price}], file)
-                print("[INVENTORY] Added {qty} units of {item} @ Tk.{price}/unit\n".format(
+                print("\033[93m\n[INVENTORY] \033[0m", end='')
+                print("\nAdded {qty} units of {item} @ Tk.{price}/unit\n".format(
                     qty=quantity, item=name, price=new_price))
                 return
 
@@ -89,7 +90,8 @@ class Inventory:
         with open(self.inventory_data, "w") as file:
             # Serialize items list to JSON and write to file
             json.dump(items, file)
-            print("[INVENTORY] Added {qty} units of {item} @ Tk.{price}/unit\n".format(
+            print("\033[93m\n[INVENTORY] \033[0m", end='')
+            print("Added {qty} units of {item} @ Tk.{price}/unit\n".format(
                 qty=quantity, item=name, price=new_price))
         return
 
@@ -113,11 +115,13 @@ class Inventory:
                     break
                 else:
                     # If there is not enough quantity in inventory, print an error message and return False
-                    print("[INVENTORY] {name} is {qty} units less than required amount\n".format(
+                    print("\033[91m\n[INVENTORY] \033[0m", end='')
+                    print("{name} is {qty} units less than required amount\n".format(
                         name=name, qty=quantity-item["qty"]))
                     return False, 0
         else:
-            print("[INVENTORY] {name} not available in inventory\n")
+            print("\033[91m\n[INVENTORY] \033[0m", end='')
+            print("{name} not available in inventory\n")
             return False, 0
 
         # Update the inventory data file with the modified item quantities
@@ -130,6 +134,7 @@ class Inventory:
                 {"date": date.today(), "item": name, "product": product, "qty": quantity, "cost": price})
 
         # Print a success message indicating the transfer of items to production and return price of the item for product cost calculation
+        print("\033[92m\n[INVENTORY] \033[0m", end='')
         print("[INVENTORY] Transferred {qty} units of {item} to produce {product}\n".format(
             qty=quantity, item=name, product=product))
         return True, price
@@ -137,4 +142,5 @@ class Inventory:
     # Generate log report
     def generate_report(self):
         system("cp .csv/inventory_log.csv \"Inventory Log Report\".csv")
-        print("[INVENTORY] Generated inventory log report.")
+        print("\033[93m\n[INVENTORY] \033[0m", end='')
+        print("Generated inventory log report.")
