@@ -89,6 +89,7 @@ if not exists(".credentials.json"):
 
 
 while True:
+    # Check if the application is quarantined
     with open(".fallback.txt", "r") as fallback_file:
         quarantine = fallback_file.readlines()
         if len(quarantine) == 0:
@@ -105,7 +106,8 @@ while True:
                 hours, minutes = time.split(':')[0:2]
                 print("[SYSTEM] Application quarantined due to earlier suspicious activites. Try again after {hour} hours and {minute} minutes.\n".format(hour=hours, minute=minutes))
             sys.exit()
-
+            
+    # User login
     print("[SYSTEM] Please login to continue\n")
     logged_in = False
     wrong_pass_count = 4
