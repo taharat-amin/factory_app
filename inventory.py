@@ -18,7 +18,7 @@ class Inventory:
 
     # Representation method to provide a string representation of the class
     def __repr__(self):
-        text = "[INVENTORY] List of Inventory Begin\n-----------------------------------\n"
+        text = ''
         items = []
         with open(self.inventory_data, "r") as file:
             try:
@@ -26,10 +26,31 @@ class Inventory:
             except json.decoder.JSONDecodeError:
                 return "[INVENTORY] No item exists in inventory\n"
 
+        longest_name = len("Name")
+        longest_quantity = len("Quantity")
+        longest_price = len("Price")
         for item in items:
-            text += str(item)+"\n"
-        text += "\n**Price indicates moving average unit price**\n"
-        text += "\n-----------------------------------\n[INVENTORY] List of Inventory End\n"
+            if len(item["name"]) > longest_name:
+                longest_name = len(item["name"])
+            if len(str(item["qty"])) > longest_quantity:
+                longest_quantity = len(item["qty"])
+            if len(str(item["price"])) > longest_price:
+                longest_price = len(item["price"])
+
+        text += "Inventory".center(longest_name+longest_quantity+longest_price+6)
+        text += "\n"
+        text += "-"*(longest_name+longest_quantity+longest_price+8)+"\n"
+        text += "Item"+" "*(longest_name-len("Item"))+" | "
+        text += "Quantity"+" "*(longest_quantity-len("Quantity"))+" | "
+        text += "Price"+" "*(longest_price-len("Price"))+" |\n"
+        text += "-"*(longest_name+longest_quantity+longest_price+8)+"\n"
+
+        for item in items:
+
+            text += "{name} | {qty} | {price} |\n".format(name=item["name"].ljust(longest_name), qty=str(
+                item["qty"]).ljust(longest_quantity), price=str(item["price"]).ljust(longest_price))
+        
+        text += "-"*(longest_name+longest_quantity+longest_price+8)+"\n"
 
         return text
 
@@ -117,3 +138,4 @@ class Inventory:
     # Generate log report
     def generate_report(self):
         system("cp .csv/inventory_log.csv \"Inventory Log Report\".csv")
+        print("[INVENTORY] Generated inventory log report.")
