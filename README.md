@@ -21,7 +21,7 @@ Welcome to the Inventory Management System repository! This system is designed t
 
 1. **Clone the Repository**:
    ```
-   git clone https://github.com/your-username/inventory-management-system.git
+   git clone https://github.com/taharat-amin/inventory-management-system.git
    cd inventory-management-system
    ```
 
