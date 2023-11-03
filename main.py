@@ -154,28 +154,67 @@ while True:
         while True:
             # Ask user for management activity
             q1 = input(
-                "[SYSTEM] What do you want to manage?\n1. Inventory\n2. Employees\n3. Production\nq. Logout\nEnter option:\n")
+                "[SYSTEM] What do you want to manage?\n(1) Inventory\n(2) Employees\n(3) Production\n(q) Logout\nEnter option:\n")
             if q1 == "1":
                 while True:
                     q2 = input(
-                        "What activity do you want to perform?\n1. View Inventory\n2. Add items to inventory\n3. Generate inventory log report\n#. Go back to previous menu\nEnter option:\n")
+                        "What activity do you want to perform?\n(1) View Inventory\n(2) Add items to inventory\n(3) Generate inventory log report\n(b) Go back to previous menu\nEnter option:\n")
                     if q2 == "1":
                         print(inv)
                     elif q2 == "2":
-                        inv.add_item(input("Enter the name of the inventory item:\n" ), float(input("Enter the quantity of the item (numbers only):\n")), float(input("Enter the purchase price per unit of the product:\n")))
+                        inv.add_item(input("Enter the name of the inventory item: "), float(input(
+                            "Enter the quantity of the item (numbers only): ")), float(input("Enter the purchase price per unit of the product: ")))
                     elif q2 == "3":
                         inv.generate_report()
-                    elif q2 == "#":
+                    elif q2 == "b":
                         break
                     else:
-                        print("[SYSTEM] Option not recognized. Try again")
+                        print("[SYSTEM] Option not recognized. Try again\n")
                         continue
             elif q1 == "2":
-                pass
+                while True:
+                    q2 = input(
+                        "What activity do you want to perform?\n(1) View Employees\n(2) Add new employee\n(3) Generate employee log report\n(b) Go back to previous menu\nEnter option:\n")
+                    if q2 == "1":
+                        print(emp)
+                    elif q2 == "2":
+                        emp.add_employee(input("Enter the name of the employee: "), input("Enter the address of the employee: "), input(
+                            "Enter the contact number of the employee: "), float(input("Enter the hourly wage rate of the employee (numbers only): ")))
+                    elif q2 == "3":
+                        emp.generate_report()
+                    elif q2 == "b":
+                        break
+                    else:
+                        print("[SYSTEM] Option not recognized. Try again\n")
+                        continue
             elif q1 == "3":
-                pass
+                while True:
+                    q2 = input(
+                        "What activity do you want to perform?\n(1) View production methods\n(2) Add or update production method\n(3) Start production\n(4) Generate production cost report\n(b) Go back to previous menu\nEnter option:\n")
+                    if q2 == "1":
+                        print(pro)
+                    elif q2 == "2":
+                        counter = int(input(
+                            "How many raw materials are required to produce the product? (numbers only): "))
+                        items = {}
+                        while counter > 0:
+                            item = input("Name of raw material: ")
+                            items[item] = float(
+                                input("Required quantity of raw material: "))
+                            counter -= 1
+                        pro.add_production_method(input("Enter name of the product: "), items, float(
+                            input("Enter required labour hours: ")))
+                    elif q2 == "3":
+                        emp.generate_report()
+                    elif q2 == "4":
+                        pass
+                    elif q2 == "b":
+                        break
+                    else:
+                        print("[SYSTEM] Option not recognized. Try again\n")
+                        continue
             elif q1 == "q":
                 break
             else:
-                print("[SYSTEM] Option not recognized. Try again")
+                print("[SYSTEM] Option not recognized. Try again\n")
                 continue

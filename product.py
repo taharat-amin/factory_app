@@ -28,18 +28,43 @@ class Product:
 
     # Representation of Product objects
     def __repr__(self) -> str:
-        text = "[PRODUCT] List of Production Methods Begin\n-----------------------------------\n"
+        text = ""
         methods = []
         # Read production methods from JSON file
         with open(self.product_data, "r") as file:
             try:
                 methods = json.load(file)
             except json.decoder.JSONDecodeError:
-                return "[PRODUCT] No production method exists\n"
-        # Add each production method's information to the representation
+                print("\033[91m\n[PRODUCT]  \033[0m", end='')
+                return "No production method exists\n"
+
+        longest_name = len("Name")
+        longest_rm = len("Required DM")
+        longest_labor = len("Required DL")
         for method in methods:
-            text += str(method) + "\n"
-        text += "\n-----------------------------------\n[INVENTORY] List of Inventory End\n"
+            if len(method["name"]) > longest_name:
+                longest_name = len(method["name"])
+            if len(str(method["raw_materials"])) > longest_rm:
+                longest_rm = len(str(method["raw_materials"]))
+            if len(str(method["labor_hours"])) > longest_labor:
+                longest_labor = len(str(method["labor_hours"]))
+
+        text += "Production Methods".center(longest_name +
+                                            longest_labor+longest_rm+8)
+        text += "-"*(longest_name+longest_labor+longest_rm+8)
+        text += "Name"+" "*(longest_name-len("Name"))+" | "
+        text += "Required DM"+" "*(longest_rm-len("Required DM"))+" | "
+        text += "Required DL"+" "*(longest_labor-len("Required DL"))+" |\n"
+        text += "-"*(longest_name+1)+"+"+"-" * \
+            (longest_rm+2)+"+"+"-"*(longest_labor+3)
+
+        for method in methods:
+            text += "{name} | {rm} | {dl} |\n".format(
+                name=method["name"].ljust(longest_name),
+                rm=str(method["raw_materials"]).ljust(longest_rm),
+                dl=str(method["labor_hours"]).rjust(longest_labor)
+            )
+
         return text
 
     # Method to add or update a production method
@@ -53,7 +78,8 @@ class Product:
                 # If the file is empty, add the first production method
                 json.dump(
                     [{"name": name, "raw_materials": raw_materials, "labor_hours": labor_hour}], file)
-                print("[PRODUCT] Added new production method for {product}\n".format(
+                print("\033[92m\n[PRODUCT] \033[0m", end='')
+                print("Added new production method for {product}\n".format(
                     product=name))
                 return
 
@@ -62,14 +88,16 @@ class Product:
             if product["name"] == name:
                 product["raw_materials"] = raw_materials
                 product["labor_hours"] = labor_hour
-                message = "[PRODUCT] Updated production method for {product}\n".format(
+                print("\033[92m\n[PRODUCT] \033[0m", end='')
+                message = "Updated production method for {product}\n".format(
                     product=name)
                 break
         else:
             # If not, add the new production method
             products.append(
                 {"name": name, "raw_materials": raw_materials, "labor_hours": labor_hour})
-            message = "[PRODUCT] Added new production method for {product}\n".format(
+            print("\033[92m\n[PRODUCT] \033[0m", end='')
+            message = "Added new production method for {product}\n".format(
                 product=name)
 
         # Write the updated production methods to the JSON file
@@ -90,7 +118,8 @@ class Product:
             try:
                 products = json.load(file)
             except json.decoder.JSONDecodeError:
-                print("[PRODUCT] No production method exists\n")
+                print("\033[91m\n[PRODUCT] \033[0m", end='')
+                print("No production method exists\n")
                 return
 
         # Check if the specified product exists in production methods
@@ -104,7 +133,8 @@ class Product:
                         material_cost += raw_material[1]
                         total_cost += raw_material[1]
                     else:
-                        print("[PRODUCT] Aborting production of {produce} due to insufficient inventory\n".format(
+                        print("\033[91m\n[PRODUCT] \033[0m", end='')
+                        print("Aborting production of {produce} due to unavilability of raw material\n".format(
                             produce=produce))
                         return
                 # Engage employee for labor
@@ -114,7 +144,8 @@ class Product:
                     labor_cost += labor[1]
                     total_cost += labor[1]
                 else:
-                    print("[PRODUCT] Aborting production of {produce} due to insufficient labor budget\n".format(
+                    print("\033[91m\n[PRODUCT] \033[0m", end='')
+                    print("Aborting production of {produce} due to insufficient labor budget\n".format(
                         produce=produce))
                     return
 
@@ -128,11 +159,13 @@ class Product:
                         {"date": date.today(), "product": produce, "quantity": quantity, "material_cost": material_cost,
                          "labor_cost": labor_cost, "overhead_cost": overhead_cost, "total_cost": total_cost}
                     )
-                print("[PRODUCT] Produced {unit} units of {product} @ Tk.{cost} total cost\n".format(
+                print("\033[92m\n[PRODUCT] \033[0m", end='')
+                print("Produced {unit} units of {product} @ Tk.{cost} total cost\n".format(
                     unit=quantity, product=produce, cost=total_cost))
                 return
         else:
-            print("[PRODUCT] No production method found for {produce}\n".format(
+            print("\033[91m\n[PRODUCT] \033[0m", end='')
+            print("No production method found for {produce}\n".format(
                 produce=produce))
             return
 
@@ -140,3 +173,5 @@ class Product:
     def generate_report(self):
         # Copy the product log CSV file to create a production report
         system("cp .csv/product_log.csv \"Production Report\".csv")
+        print("\033[93m\n[PRODUCT] \033[0m", end='')
+        print("Generated product cost report\n")
