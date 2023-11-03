@@ -11,6 +11,7 @@ Welcome to the Inventory Management System repository! This system is designed t
 
 ## Technologies Used
 
+- **Platform**: Linux
 - **Languages**: Python, JSON
 - **Libraries**: CSV (for data storage), hashlib (for password encryption)
 - **Frameworks**: None
@@ -53,8 +54,11 @@ Welcome to the Inventory Management System repository! This system is designed t
    - Option (2) allows you to add or update a production method. Enter the name, required raw materials, and labor hours when prompted.
    - Option (3) starts the production process. Enter the product name, quantity to be produced, employee name for production, and labor budget when prompted.
    - Option (4) generates a production cost report.
+     
+9. **Creating New User**:
+   - Press 'n' to create new user
 
-9. **Logout**:
+10. **Logout**:
    - To logout, type 'q' in the main menu and press enter.
 
 ## Contributing
