@@ -202,11 +202,11 @@ while True:
                                 input("Required quantity of raw material: "))
                             counter -= 1
                         pro.add_production_method(input("Enter name of the product: "), items, float(
-                            input("Enter required labour hours: ")))
+                            input("Enter required labour hours: ")))                    
                     elif q2 == "3":
-                        emp.generate_report()
+                        pro.start_production(input("Enter produce name: "), float(input("Enter the quantity to be produced: ")), input("Enter who will produce: "), float(input("Enter the budget for labor: ")))
                     elif q2 == "4":
-                        pass
+                        emp.generate_report()                    
                     elif q2 == "b":
                         break
                     else:
