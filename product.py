@@ -56,7 +56,7 @@ class Product:
         text += "Required DM"+" "*(longest_rm-len("Required DM"))+" | "
         text += "Required DL"+" "*(longest_labor-len("Required DL"))+" |\n"
         text += "-"*(longest_name+1)+"+"+"-" * \
-            (longest_rm+2)+"+"+"-"*(longest_labor+3)
+            (longest_rm+2)+"+"+"-"*(longest_labor+3)+"\n"
 
         for method in methods:
             text += "{name} | {rm} | {dl} |\n".format(
