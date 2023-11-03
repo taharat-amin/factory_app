@@ -33,22 +33,31 @@ class Inventory:
             if len(item["name"]) > longest_name:
                 longest_name = len(item["name"])
             if len(str(item["qty"])) > longest_quantity:
-                longest_quantity = len(item["qty"])
+                longest_quantity = len(str(item["qty"]))
             if len(str(item["price"])) > longest_price:
-                longest_price = len(item["price"])
+                longest_price = len(str(item["price"]))
 
-        text += "Inventory".center(longest_name+longest_quantity+longest_price+6)+"\n"
+        text += "Inventory".center(longest_name +
+                                   longest_quantity+longest_price+8)+"\n"
         text += "-"*(longest_name+longest_quantity+longest_price+8)+"\n"
-        text += "Item"+" "*(longest_name-len("Item"))+" | "
-        text += "Quantity"+" "*(longest_quantity-len("Quantity"))+" | "
-        text += "Price"+" "*(longest_price-len("Price"))+" |\n"
-        text += "-"*(longest_name+1)+"+"+"-"*(longest_quantity+2)+"+"+"-"*(longest_price+3)+"\n"
+        text += "Item"+" " * \
+            (longest_name-len("Item"))+" | "
+        text += "Quantity" + \
+            " "*(longest_quantity-len("Quantity"))+" | "
+        text += "Price"+" " * \
+            (longest_price-len("Price"))+" |\n"
+        text += "-"*(longest_name+1)+"+"+"-" * \
+            (longest_quantity+2)+"+"+"-"*(longest_price+3)+"\n"
 
         for item in items:
 
-            text += "{name} | {qty} | {price} |\n".format(name=item["name"].ljust(longest_name), qty=str(
-                item["qty"]).rjust(longest_quantity), price=str(item["price"]).rjust(longest_price))
-        
+            text += "{name} | {qty} | {price} |\n".format(
+                name=item["name"].ljust(longest_name),
+                qty=str(
+                    item["qty"]).rjust(longest_quantity),
+                price=str(item["price"]).rjust(longest_price)
+            )
+
         text += "-"*(longest_name+longest_quantity+longest_price+8)+"\n"
 
         return text

@@ -18,7 +18,7 @@ class Employee:
     # Representation of Employee objects
     def __repr__(self):
         # Initialize text with header
-        text = "[EMPLOYEE] List of Employees Begin\n-----------------------------------\n"
+        text = ""
         employees = []
         # Read employee data from JSON file
         with open(self.employee_data, "r") as file:
@@ -27,10 +27,46 @@ class Employee:
             except json.decoder.JSONDecodeError:
                 return "[EMPLOYEE] No employee enlisted\n"
 
-        # Add each employee's information to the representation
+        longest_name = len("Name")
+        longest_address = len("Address")
+        longest_contact = len("Contact")
+        longest_wage = len("Hourly Wage")
+
         for employee in employees:
-            text += str(employee)+"\n"
-        text += "-----------------------------------\n[EMPLOYEE] List of Employees End\n"
+            if len(employee["name"]) > longest_name:
+                longest_name = len(employee["name"])
+            if len(employee["address"]) > longest_address:
+                longest_address = len(employee["address"])
+            if len(employee["contact"]) > longest_contact:
+                longest_contact = len(employee["contact"])
+            if len(str(employee["hourly_wage"])) > longest_wage:
+                longest_wage = len(str(employee["hourly_wage"]))
+
+        text += "Employees".center(longest_name+longest_address +
+                                   longest_contact+longest_wage+11)+"\n"
+        text += "-"*(longest_name+longest_address +
+                     longest_contact+longest_wage+11)+"\n"
+        text += "Name"+" " * \
+            (longest_name-len("Name"))+" | "
+        text += "Address"+ \
+            " "*(longest_address-len("Address"))+" | "
+        text += "Contact"+ \
+            " "*(longest_contact-len("Contact"))+" | "
+        text += "Hourly Wage"+ \
+            " "*(longest_wage-len("Hourly Wage"))+" |\n"
+        text += "-"*(longest_name+1)+"+"+"-"*(longest_address+2) + \
+            "+"+"-"*(longest_contact+2)+"+"+"-"*(longest_wage+3)+"\n"
+
+        for employee in employees:
+
+            text += "{name} | {address} | {contact} | {wage} |\n".format(
+                name=employee["name"].ljust(longest_name),
+                address=employee["address"].ljust(longest_address),
+                contact=employee["contact"].ljust(longest_contact),
+                wage=str(employee["hourly_wage"]).rjust(longest_wage)
+            )
+        text += "-"*(longest_name+longest_address +
+                     longest_contact+longest_wage+11)+"\n"
 
         return text
 
@@ -45,15 +81,17 @@ class Employee:
                 # If the file is empty, add the first employee
                 json.dump([{"name": name, "address": address,
                           "contact": contact, "hourly_wage": hourly_wage}], file)
-                print("[EMPLOYEE] Enlisted {name} as employee @ Tk.{wage}/hour rate\n".format(
+                print("\033[92m\n[EMPLOYEE] \033[0m", end='')
+                print("Enlisted {name} as employee @ Tk.{wage}/hour rate\n".format(
                     name=name, wage=hourly_wage))
                 return
 
         # Check if the employee already exists
         for employee in employees:
             if employee["name"] == name:
+                print("\033[91m\n[EMPLOYEE] \033[0m", end='')
                 print(
-                    "[EMPLOYEE] Employee {name} already enlisted\n".format(name=name))
+                    "Employee {name} already enlisted\n".format(name=name))
                 return
         else:
             # If not, add the new employee
@@ -63,7 +101,8 @@ class Employee:
         # Write the updated employee data to the JSON file
         with open(self.employee_data, "w") as file:
             json.dump(employees, file)
-        print("[EMPLOYEE] Enlisted {name} as employee @ Tk.{wage}/hour rate\n".format(
+        print("\033[92m\n[EMPLOYEE] \033[0m", end='')
+        print("Enlisted {name} as employee @ Tk.{wage}/hour rate\n".format(
             name=name, wage=hourly_wage))
 
     # Engage an employee for a specific project
@@ -85,12 +124,14 @@ class Employee:
                             {"date": date.today(), "employee": name,
                              "product": product, "hours": hours, "cost": wage}
                         )
-                    print("[EMPLOYEE] Added labor worth {wage} from {employee}\n".format(
+                    print("\033[92m\n[EMPLOYEE] \033[0m", end='')
+                    print("Added labor worth {wage} from {employee}\n".format(
                         wage=wage, employee=name))
                     return True, wage
                 else:
                     # If not, print a message indicating insufficient budget
-                    print("[EMPLOYEE] Wage of {employee} is Tk.{wage} higher than budget\n".format(
+                    print("\033[91m\n[EMPLOYEE] \033[0m", end='')
+                    print("Wage of {employee} is Tk.{wage} higher than budget\n".format(
                         employee=name, wage=wage - budget))
                     return False, 0
 
