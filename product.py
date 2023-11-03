@@ -50,8 +50,8 @@ class Product:
                 longest_labor = len(str(method["labor_hours"]))
 
         text += "Production Methods".center(longest_name +
-                                            longest_labor+longest_rm+8)
-        text += "-"*(longest_name+longest_labor+longest_rm+8)
+                                            longest_labor+longest_rm+8)+"\n"
+        text += "-"*(longest_name+longest_labor+longest_rm+8)+"\n"
         text += "Name"+" "*(longest_name-len("Name"))+" | "
         text += "Required DM"+" "*(longest_rm-len("Required DM"))+" | "
         text += "Required DL"+" "*(longest_labor-len("Required DL"))+" |\n"
@@ -64,6 +64,8 @@ class Product:
                 rm=str(method["raw_materials"]).ljust(longest_rm),
                 dl=str(method["labor_hours"]).rjust(longest_labor)
             )
+
+        text += "-"*(longest_name+longest_labor+longest_rm+8)+"\n"
 
         return text
 
@@ -78,7 +80,7 @@ class Product:
                 # If the file is empty, add the first production method
                 json.dump(
                     [{"name": name, "raw_materials": raw_materials, "labor_hours": labor_hour}], file)
-                print("\033[92m\n[PRODUCT] \033[0m", end='')
+                print("\033[93m\n[PRODUCT] \033[0m", end='')
                 print("Added new production method for {product}\n".format(
                     product=name))
                 return
@@ -88,7 +90,7 @@ class Product:
             if product["name"] == name:
                 product["raw_materials"] = raw_materials
                 product["labor_hours"] = labor_hour
-                print("\033[92m\n[PRODUCT] \033[0m", end='')
+                print("\033[93m\n[PRODUCT] \033[0m", end='')
                 message = "Updated production method for {product}\n".format(
                     product=name)
                 break
@@ -96,7 +98,7 @@ class Product:
             # If not, add the new production method
             products.append(
                 {"name": name, "raw_materials": raw_materials, "labor_hours": labor_hour})
-            print("\033[92m\n[PRODUCT] \033[0m", end='')
+            print("\033[93m\n[PRODUCT] \033[0m", end='')
             message = "Added new production method for {product}\n".format(
                 product=name)
 

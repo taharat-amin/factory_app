@@ -63,7 +63,6 @@ print("""\n
 █▀▀ ▄▀█ █▀▀ ▀█▀ █▀█ █▀█ █▄█   █▀▄▀█ ▄▀█ █▄░█ ▄▀█ █▀▀ █▀▀ █▀▄▀█ █▀▀ █▄░█ ▀█▀   █▀ █▄█ █▀ ▀█▀ █▀▀ █▀▄▀█
 █▀░ █▀█ █▄▄ ░█░ █▄█ █▀▄ ░█░   █░▀░█ █▀█ █░▀█ █▀█ █▄█ ██▄ █░▀░█ ██▄ █░▀█ ░█░   ▄█ ░█░ ▄█ ░█░ ██▄ █░▀░█\n""")
 print("\nWELCOME TO THE FACTORY MANAGEMENT SYSTEM\n")
-print("\nPress 'ctr+c' anywhere to exit the application\n")
 
 # User creation segment
 if not exists(".credentials.json"):
@@ -77,10 +76,10 @@ if not exists(".credentials.json"):
             with open(".credentials.json", "w") as file:
                 json.dump({"username": username, "password": sha256(
                     pass1.encode('utf-8')).hexdigest()}, file)
-            print("[SYSTEM] Profile creation successful\n")
+            print("\n[SYSTEM] Profile creation successful\n")
             break
         else:
-            print("[SYSTEM] Passwords do not match. Try again\n")
+            print("\n[SYSTEM] Passwords do not match. Try again\n")
             continue
 
 
@@ -105,7 +104,7 @@ while True:
             sys.exit()
 
     # User login
-    print("[SYSTEM] Please login to continue\n")
+    print("[SYSTEM] Please login to continue\n(Press 'ctrl+c' to exit application)\n")
     logged_in = False
     wrong_pass_count = 4
 

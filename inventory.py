@@ -77,7 +77,7 @@ class Inventory:
                 json.dump(
                     [{"name": name, "qty": quantity, "price": new_price}], file)
                 print("\033[93m\n[INVENTORY] \033[0m", end='')
-                print("\nAdded {qty} units of {item} @ Tk.{price}/unit\n".format(
+                print("Added {qty} units of {item} @ Tk.{price}/unit\n".format(
                     qty=quantity, item=name, price=new_price))
                 return
 
