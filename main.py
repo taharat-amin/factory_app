@@ -33,7 +33,7 @@ if not exists(".csv/inventory_log.csv"):
 if not exists(".json/employees.json"):
     system("touch .json/employees.json")
 
-if not exists(".csv/employee_log.json"):
+if not exists(".csv/employee_log.csv"):
     system("touch .csv/employee_log.csv")
     with open(".csv/employee_log.csv", "w") as file:
         csv.DictWriter(file, fieldnames=employee_log_headers,
@@ -50,6 +50,9 @@ if not exists(".csv/product_log.csv"):
 
 if not exists(".fallback.txt"):
     system("touch .fallback.txt")
+
+if not exists("./Reports"):
+    system("mkdir Reports")
 
 # Instantiate the objects
 print("\n[SYSTEM] Initializing system...\n")
@@ -74,8 +77,8 @@ if not exists(".credentials.json"):
         pass2 = getpass("Enter password again: ")
         if pass1 == pass2:
             with open(".credentials.json", "w") as file:
-                json.dump({"username": username, "password": sha256(
-                    pass1.encode('utf-8')).hexdigest()}, file)
+                json.dump([{"username": username, "password": sha256(
+                    pass1.encode('utf-8')).hexdigest()}], file)
             print("\n[SYSTEM] Profile creation successful\n")
             break
         else:
@@ -84,8 +87,16 @@ if not exists(".credentials.json"):
 
 
 def add_user(username, password):
-    with open(".credentials.json", "r+") as file:
-        users = json.load()
+    users = []
+    with open(".credentials.json", "r") as file:
+        users = json.load(file)
+
+    users.append({"username": username, "password": sha256(
+        password.encode('utf-8')).hexdigest()})
+    with open(".credentials.json", "w") as file:
+        json.dump(users, file)
+
+    print("\n[SYSTEM] Added new user\n")
 
 
 while True:
@@ -119,11 +130,19 @@ while True:
         print("\n[SYSTEM] Exiting application")
         sys.exit()
 
+    user_pass = ''
+    user_found = False
+
     with open(".credentials.json", "r") as file:
         creds = json.load(file)
-        if creds["username"] != username:
-            print("[SYSTEM] Username not found\n")
-            continue
+        for cred in creds:
+            if cred["username"] == username:
+                user_pass = cred["password"]
+                user_found = True
+
+    if user_found == False:
+        print("[SYSTEM] Username not found\n")
+        continue
 
     while wrong_pass_count > 0:
 
@@ -133,7 +152,7 @@ while True:
             print("\n[SYSTEM] Exiting application")
             sys.exit()
 
-        if creds["password"] != sha256(password.encode('utf-8')).hexdigest():
+        if user_pass != sha256(password.encode('utf-8')).hexdigest():
             wrong_pass_count -= 1
             if wrong_pass_count == 0:
                 print(
@@ -154,11 +173,11 @@ while True:
         # Perform actions after successful login
         print("\n[SYSTEM] Login successful. Welcome {username}\n".format(
             username=username))
-        # Add your code for actions to be performed after successful login here
+        # Actions to be performed after successful login here
         while True:
             # Ask user for management activity
             q1 = input(
-                "[SYSTEM] What do you want to manage?\n(1) Inventory\n(2) Employees\n(3) Production\n(q) Logout\nEnter option:\n")
+                "[SYSTEM] What do you want to manage?\n(1) Inventory\n(2) Employees\n(3) Production\n(n) Create new user\n(q) Logout\nEnter option:\n")
             if q1 == "1":
                 while True:
                     q2 = input(
@@ -220,6 +239,12 @@ while True:
                         continue
             elif q1 == "q":
                 break
+            elif q1 == "n":
+                name = input("Enter username: ")
+                p1 = getpass("Enter password: ")
+                p2 = getpass("Enter password again: ")
+                if p1 == p2:
+                    add_user(name, p1)
             else:
                 print("[SYSTEM] Option not recognized. Try again\n")
                 continue

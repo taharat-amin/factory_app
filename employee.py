@@ -126,7 +126,7 @@ class Employee:
                              "product": product, "hours": hours, "cost": wage}
                         )
                     print("\033[92m\n[EMPLOYEE] \033[0m", end='')
-                    print("Added labor worth {wage} from {employee}\n".format(
+                    print("Added labor worth Tk.{wage} from {employee}\n".format(
                         wage=wage, employee=name))
                     return True, wage
                 else:
@@ -142,6 +142,6 @@ class Employee:
 
     # Generate log report
     def generate_report(self):
-        system("cp .csv/employee_log.csv \"Employee Log Report\".csv")
+        system("cp .csv/employee_log.csv ./Reports/\"Employee Log Report\".csv")
         print("\033[93m\n[EMPLOYEE] \033[0m", end='')
         print("Generated employee log report\n")

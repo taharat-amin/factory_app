@@ -180,6 +180,6 @@ class Product:
     # Method to generate a production report
     def generate_report(self):
         # Copy the product log CSV file to create a production report
-        system("cp .csv/product_log.csv \"Production Report\".csv")
+        system("cp .csv/product_log.csv ./Reports/\"Production Report\".csv")
         print("\033[93m\n[PRODUCT] \033[0m", end='')
         print("Generated product cost report\n")
