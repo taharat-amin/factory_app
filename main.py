@@ -68,6 +68,7 @@ print("""\n
 ╚═╝     ╚═╝  ╚═╝ ╚═════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝       ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝       ╚══════╝   ╚═╝   ╚══════╝   ╚═╝   ╚══════╝╚═╝     ╚═╝
                                                                                                                                                                                                                     \n""")
 print("\nWELCOME TO THE FACTORY MANAGEMENT SYSTEM\n")
+print("\nPress 'ctr+c' anywhere to exit the application\n")
 
 # User creation segment
 if not exists(".credentials.json"):
@@ -104,14 +105,20 @@ while True:
             else:
                 time = str(time_delta-time_difference)
                 hours, minutes = time.split(':')[0:2]
-                print("[SYSTEM] Application quarantined due to earlier suspicious activites. Try again after {hour} hours and {minute} minutes.\n".format(hour=hours, minute=minutes))
+                print("[SYSTEM] Application quarantined due to earlier suspicious activites. Try again after {hour} hours and {minute} minutes.\n".format(
+                    hour=hours, minute=minutes))
             sys.exit()
-            
+
     # User login
     print("[SYSTEM] Please login to continue\n")
     logged_in = False
     wrong_pass_count = 4
-    username = input("Enter username: ")
+
+    try:
+        username = input("Enter username: ")
+    except KeyboardInterrupt:
+        print("\n[SYSTEM] Exiting application")
+        sys.exit()
 
     with open(".credentials.json", "r") as file:
         creds = json.load(file)
@@ -120,7 +127,13 @@ while True:
             continue
 
     while wrong_pass_count > 0:
-        password = getpass("Enter password: ")
+
+        try:
+            password = getpass("Enter password: ")
+        except KeyboardInterrupt:
+            print("\n[SYSTEM] Exiting application")
+            sys.exit()
+
         if creds["password"] != sha256(password.encode('utf-8')).hexdigest():
             wrong_pass_count -= 1
             if wrong_pass_count == 0:
@@ -129,7 +142,8 @@ while True:
                 sleep(3)
                 with open(".fallback.txt", "w") as fallback_file:
                     fallback_file.writelines(str(datetime.now()))
-                print("[SYSTEM] System locked down for 3 hours due to suspicious activity.\n")
+                print(
+                    "[SYSTEM] System locked down for 3 hours due to suspicious activity.\n")
                 sys.exit()
             print("\n[SYSTEM] Wrong password. {count} attempts left.\n".format(
                 count=wrong_pass_count))
@@ -139,6 +153,34 @@ while True:
 
     if logged_in:
         # Perform actions after successful login
-        print("\n[SYSTEM] Login successful. Welcome {username}\n".format(username=username))
+        print("\n[SYSTEM] Login successful. Welcome {username}\n".format(
+            username=username))
         # Add your code for actions to be performed after successful login here
-        pass
+        while True:
+            # Ask user for management activity
+            q1 = input(
+                "[SYSTEM] What do you want to manage?\n1. Inventory\n2. Employees\n3. Production\nq. Logout\nEnter option:\n")
+            if q1 == "1":
+                while True:
+                    q2 = input(
+                        "What activity do you want to perform?\n1. View Inventory\n2. Add items to inventory\n3. Generate inventory log report\n#. Go back to previous menu\nEnter option:\n")
+                    if q2 == "1":
+                        print(inv)
+                    elif q2 == "2":
+                        inv.add_item(input("Enter the name of the inventory item:\n" ), float(input("Enter the quantity of the item (numbers only):\n")), float(input("Enter the purchase price per unit of the product:\n")))
+                    elif q2 == "3":
+                        inv.generate_report()
+                    elif q2 == "#":
+                        break
+                    else:
+                        print("[SYSTEM] Option not recognized. Try again")
+                        continue
+            elif q1 == "2":
+                pass
+            elif q1 == "3":
+                pass
+            elif q1 == "q":
+                break
+            else:
+                print("[SYSTEM] Option not recognized. Try again")
+                continue
