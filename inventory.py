@@ -42,7 +42,7 @@ class Inventory:
         text += "Item"+" "*(longest_name-len("Item"))+" | "
         text += "Quantity"+" "*(longest_quantity-len("Quantity"))+" | "
         text += "Price"+" "*(longest_price-len("Price"))+" |\n"
-        text += "-"*(longest_name+longest_quantity+longest_price+8)+"\n"
+        text += "-"*(longest_name+1)+"+"+"-"*(longest_quantity+2)+"+"+"-"*(longest_price+3)+"\n"
 
         for item in items:
 
