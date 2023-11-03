@@ -138,3 +138,5 @@ class Employee:
     # Generate log report
     def generate_report(self):
         system("cp .csv/employee_log.csv \"Employee Log Report\".csv")
+        print("\033[93m\n[EMPLOYEE] \033[0m", end='')
+        print("Generated employee log report\n")

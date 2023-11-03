@@ -152,4 +152,4 @@ class Inventory:
     def generate_report(self):
         system("cp .csv/inventory_log.csv \"Inventory Log Report\".csv")
         print("\033[93m\n[INVENTORY] \033[0m", end='')
-        print("Generated inventory log report.")
+        print("Generated inventory log report\n")
