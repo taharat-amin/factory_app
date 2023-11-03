@@ -145,7 +145,7 @@ class Inventory:
 
         # Print a success message indicating the transfer of items to production and return price of the item for product cost calculation
         print("\033[92m\n[INVENTORY] \033[0m", end='')
-        print("[INVENTORY] Transferred {qty} units of {item} to produce {product}\n".format(
+        print("Transferred {qty} units of {item}\n".format(
             qty=quantity, item=name, product=product))
         return True, price
 

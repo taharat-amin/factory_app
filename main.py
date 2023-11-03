@@ -62,7 +62,7 @@ print("[SYSTEM] System initialized...")
 print("""\n
 █▀▀ ▄▀█ █▀▀ ▀█▀ █▀█ █▀█ █▄█   █▀▄▀█ ▄▀█ █▄░█ ▄▀█ █▀▀ █▀▀ █▀▄▀█ █▀▀ █▄░█ ▀█▀   █▀ █▄█ █▀ ▀█▀ █▀▀ █▀▄▀█
 █▀░ █▀█ █▄▄ ░█░ █▄█ █▀▄ ░█░   █░▀░█ █▀█ █░▀█ █▀█ █▄█ ██▄ █░▀░█ ██▄ █░▀█ ░█░   ▄█ ░█░ ▄█ ░█░ ██▄ █░▀░█\n""")
-print("\nWELCOME TO THE FACTORY MANAGEMENT SYSTEM\n")
+print("\n-----------------------\n|Developer Information|\n|TAHARAT AMIN         |\n|DHAKA, BANGLADESH    |\n|GITHUB: taharat-amin |\n-----------------------\n\n")
 
 # User creation segment
 if not exists(".credentials.json"):
@@ -81,6 +81,11 @@ if not exists(".credentials.json"):
         else:
             print("\n[SYSTEM] Passwords do not match. Try again\n")
             continue
+
+
+def add_user(username, password):
+    with open(".credentials.json", "r+") as file:
+        users = json.load()
 
 
 while True:
@@ -157,7 +162,7 @@ while True:
             if q1 == "1":
                 while True:
                     q2 = input(
-                        "What activity do you want to perform?\n(1) View Inventory\n(2) Add items to inventory\n(3) Generate inventory log report\n(b) Go back to previous menu\nEnter option:\n")
+                        "What activity do you want to perform?\n(1) View Inventory\n(2) Add items to inventory\n(3) Generate inventory log report\n(b) Go back to previous menu\n(n) Create new user\nEnter option:\n")
                     if q2 == "1":
                         print(inv)
                     elif q2 == "2":
@@ -202,11 +207,12 @@ while True:
                                 input("Required quantity of raw material: "))
                             counter -= 1
                         pro.add_production_method(input("Enter name of the product: "), items, float(
-                            input("Enter required labour hours: ")))                    
+                            input("Enter required labour hours: ")))
                     elif q2 == "3":
-                        pro.start_production(input("Enter produce name: "), float(input("Enter the quantity to be produced: ")), input("Enter who will produce: "), float(input("Enter the budget for labor: ")))
+                        pro.start_production(input("Enter produce name: "), float(input("Enter the quantity to be produced: ")), input(
+                            "Enter who will produce: "), float(input("Enter the budget for labor: ")))
                     elif q2 == "4":
-                        emp.generate_report()                    
+                        pro.generate_report()
                     elif q2 == "b":
                         break
                     else:
